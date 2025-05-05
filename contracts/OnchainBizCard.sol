@@ -5,13 +5,41 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract OnchainBizCard is ERC721, Ownable {
-    uint256 private _nextTokenId = 1;  // Counters 없이 단순 ++
+    /*──────────────────
+      1) 상태 저장소
+    ──────────────────*/
+    struct CardInfo {
+        string name;
+        string title;
+        string contact;
+        string website;
+    }
 
-    /* --- ① constructor  ----------------------------------- */
+    uint256 private _nextTokenId = 1;
+    mapping(uint256 => CardInfo) private _cards;
+
+    /*──────── constructor ────────*/
     constructor()
     ERC721("On-chain Business Card", "OCBC")
-    Ownable(msg.sender)          // ✨ Owner = 배포 지갑
+    Ownable(msg.sender)
     {}
 
-    /* --- ② 앞으로 구현할 함수 자리 -------------------------- */
+    /*──────────────────
+      2) 민팅 함수
+    ──────────────────*/
+    function mintCard(
+        string calldata name,
+        string calldata title,
+        string calldata contact,
+        string calldata website
+    ) external returns (uint256 tokenId) {
+        require(bytes(name).length > 0, "Name empty");
+
+        tokenId = _nextTokenId++;
+        _cards[tokenId] = CardInfo(name, title, contact, website);
+
+        _safeMint(msg.sender, tokenId);
+    }
+
+    /*─── 앞으로 작성할: _buildSVG + tokenURI ───*/
 }
