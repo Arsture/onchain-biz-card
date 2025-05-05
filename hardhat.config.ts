@@ -3,18 +3,20 @@ import "@nomicfoundation/hardhat-toolbox";
 import * as dotenv from "dotenv";
 dotenv.config();
 
+const { PRIVATE_KEY, RPC_POLY, RPC_AMOY } = process.env;
+
 const config: HardhatUserConfig = {
   solidity: "0.8.28",
   networks: {
-    amoy: {
-      url: `https://polygon-amoy.g.alchemy.com/v2/${process.env.ALCHEMY_KEY_AMOY}`,
-      chainId: 80002,
-      accounts: [process.env.PRIVATE_KEY!],
-    },
     polygon: {
-      url: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_KEY_POLY}`,
+      url: RPC_POLY,
       chainId: 137,
-      accounts: [process.env.PRIVATE_KEY!],
+      accounts: [PRIVATE_KEY!],
+    },
+    amoy: {
+      url: RPC_AMOY,
+      chainId: 80002,
+      accounts: [PRIVATE_KEY!],
     },
   },
 };
